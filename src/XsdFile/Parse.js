@@ -25,20 +25,8 @@ function parse() {
             .then(() => {return this.readXsdImports();}, (msg) => { fail("Error when reading XSD includes. " + msg); })
             .then(() => {return this.readXsdGlobalTypes();}, (msg) => { fail("Error when reading XSD imports. " + msg); })
             .then(() => {return this.readXsdGlobalElements();}, (msg) => { fail("Error when reading XSD global types. " + msg); })
-            
             .then(function() {
-
-                self.getAllComplexTypes().forEach((id) => {
-                    var v = self.getById(id);
-                    
-                    var path =self.getByIds(v.path)
-                        .filter(obj => helpers.isElement(obj._id))
-                        .map((v) => { return v.name; });
-
-                    resolve();
-
-                })
-
+                resolve();
             }, (e) => { fail("Error when reading global elements", e); })
     });
 }

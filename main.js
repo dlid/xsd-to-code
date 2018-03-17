@@ -32,16 +32,22 @@ function handleXsdParameter(xsdParameter) {
  */
 function resolveFilePath(filename) {
     var fullPath = path.resolve(filename);
-    if (!fs.existsSync(fullPath)) {
-        fullPath = path.join(process.cwd(), filename);
-        if (!fs.existsSync(fullPath)) {
-            fullPath = path.join(scriptPath, filename);
-            if (!fs.existsSync(fullPath)) {
-                fullPath = null;
-            }
-        }
+    
+    if (fs.existsSync(fullPath)) {
+        return fullPath;
+    } 
+
+    fullPath = path.join(process.cwd(), filename);
+    if (fs.existsSync(fullPath)) {
+        return fullPath;
     }
-    return fullPath;
+    
+    fullPath = path.join(scriptPath, filename);
+    if (fs.existsSync(fullPath)) {
+        return fullPath;        
+    }
+
+    return null;
 }
 
     do {

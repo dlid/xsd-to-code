@@ -4,6 +4,34 @@ var fs = require('fs');
 var request = require('request');
 var xml2js = require('xml2js');
 
+
+function loadFromUrl(url) {
+    return new Promise((resolve, reject) => {
+        request(url, (err, response, body) => {
+            if (err) {
+                reject("Request error " + err);
+            }
+            if (response.statusCode == 200) {
+                resolve(body);
+            } else {
+                reject('Server returned ' + response.statusCode + ' ' + url);
+            }
+        });
+    });
+}
+
+function loadFromFile(filename) {
+    return new Promise((resolve, reject) => {
+          fs.readFile(filename, "utf-8", function(err, body) {
+            if (!err) {
+                resolve(body);
+            } else {
+                reject(err);
+            }
+        });
+    });
+}
+
 /**
  * @description Load the current schema from URL or filename
  */
@@ -13,30 +41,15 @@ function loadXsdFileContent() {
 
     return new Promise((resolve, reject) => {
         if (filename.indexOf('http') === 0) {
-            
-            // Read the schema from the URL
-            request(filename, (err, response, body) => {
-                if (err) {
-                    reject("Request error " + err);
-                }
-                if (response.statusCode == 200) {
-                    self._.content = body;
-                    resolve();
-                } else {
-                    reject('Server returned ' + response.statusCode + ' ' + filename);
-                }
-            });
+            loadFromUrl(filename).then(body => {
+                self._.content = body;
+                resolve();
+            }, reject);
         } else {
-
-            // Attempt to read the content from a file
-            fs.readFile(filename, "utf-8", function(err, body) {
-                if (!err) {
-                    self._.content = body;
-                    resolve();
-                } else {
-                    reject(err);
-                }
-            });
+            loadFromFile(filename).then(body => {
+                self._.content = body;
+                resolve();
+            }, reject);
         }
     });
 }

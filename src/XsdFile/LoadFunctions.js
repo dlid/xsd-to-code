@@ -50,17 +50,17 @@ function loadXsdFileContent() {
         filename = this._.filename;
 
     return new Promise((resolve, reject) => {
+        var loadFn = null;
         if (filename.indexOf('http') === 0) {
-            loadFromUrl(filename).then(body => {
-                self._.content = body;
-                resolve();
-            }, reject);
+            loadFn = loadFromUrl;
         } else {
-            loadFromFile(filename).then(body => {
-                self._.content = body;
-                resolve();
-            }, reject);
+            loadFn = loadFromFile;
         }
+
+        loadFn(filename).then(body => {
+            self._.content = body;
+            resolve();
+        }, reject);
     });
 }
 

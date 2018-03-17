@@ -88,17 +88,10 @@ XsdFile.prototype.createAttributeFromXmlElement = function(attributeXmlNode, par
         throw "xs:attribute requires a @name or @ref attribute";
     }
 
-    var result = {
+    var result = ensureParent({
         _id : helpers.newid('attribute'),
-        name : attributeXmlNode.$.name,
-        path : []
-    };
-
-    if (parentObject) {
-        result.path = parentObject.path.slice();
-        result.path.push(parentObject._id);
-    }
-
+        name : attributeXmlNode.$.name
+    }, parentObject);
 
     return result;
 }

@@ -13,6 +13,7 @@ var readFunctions = {
     readXsdGlobalElements : require('./XsdFile/Read-GlobalElements.js'),
     readXsdGlobalTypes : require('./XsdFile/Read-GlobalTypes.js')
 };
+var utilityFunctions = require('./XsdFile/UtilityFunctions.js');
 
 function XsdFile(filenameOrUrl, xsdCache, uri) {
 
@@ -73,6 +74,9 @@ XsdFile.prototype.readXsdMetadata = readFunctions.readXsdMetadata;
 XsdFile.prototype.readXsdGlobalElements = readFunctions.readXsdGlobalElements;
 XsdFile.prototype.readXsdGlobalTypes = readFunctions.readXsdGlobalTypes;
 
+XsdFile.prototype.forEachInPath = utilityFunctions.forEachInPath;
+
+
 
 XsdFile.prototype.createAttributeFromXmlElement = function(attributeXmlNode, parentObject) {
 
@@ -94,6 +98,7 @@ XsdFile.prototype.createAttributeFromXmlElement = function(attributeXmlNode, par
         result.path = parentObject.path.slice();
         result.path.push(parentObject._id);
     }
+
 
     return result;
 }
@@ -156,15 +161,17 @@ XsdFile.prototype.createElementFromXmlElement = function(elementXmlNode, parentO
 
 XsdFile.prototype.createComplexTypeFromXmlElement = function(typeXmlNode, parentObject) {
 
-    var result = {
-        _id : helpers.newid('complexType'),
-        path : []
-    };
+    var self = this,
+        result = {
+            _id : helpers.newid('complexType'),
+            path : []
+        };
 
     if (parentObject) {
         result.path = parentObject.path.slice();
         result.path.push(parentObject._id);
     }
+
 
     var sequences = typeXmlNode[`${this._.meta.xsdNsPrefix}:sequence`];
     if (sequences) {
@@ -181,17 +188,32 @@ XsdFile.prototype.createComplexTypeFromXmlElement = function(typeXmlNode, parent
         });
     }
 
-    var attributes = typeXmlNode[`${this._.meta.xsdNsPrefix}:attribute`];
-    if (attributes) {
-        result.attributes = [];
-        attributes.forEach((attrElm) => {
-            var newAttribute = this.createAttributeFromXmlElement(attrElm, result);
+
+    self.forEachInPath(typeXmlNode, 'attribute', (attrElm) => {
+        try {
+            var newAttribute = self.createAttributeFromXmlElement(attrElm, result);
             if (newAttribute) {
                 this._.all[newAttribute._id] = newAttribute;
+                if (!result.attributes) result.attributes = [];
                 result.attributes.push(newAttribute._id);
             }
-        });
-    }
+         } catch (e) {
+             reject(e);
+             return;
+         }
+    });
+
+    // var attributes = typeXmlNode[`${this._.meta.xsdNsPrefix}:attribute`];
+    // if (attributes) {
+    //     result.attributes = [];
+    //     attributes.forEach((attrElm) => {
+    //         var newAttribute = this.createAttributeFromXmlElement(attrElm, result);
+    //         if (newAttribute) {
+    //             this._.all[newAttribute._id] = newAttribute;
+    //             result.attributes.push(newAttribute._id);
+    //         }
+    //     });
+    // }
     return result;
 }
 

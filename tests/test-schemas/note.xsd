@@ -9,6 +9,7 @@
       <xs:element name="heading" type="xs:string"/>
       <xs:element name="body" type="xs:string"/>
     </xs:sequence>
+    <xs:attribute name="david" />
   </xs:complexType>
 </xs:element>
 

@@ -1,8 +1,8 @@
 # xsd-to-code
 
-XSD to code (xtc) is a script in two parts.
+**[ NOT READY FOR USE. IN ACTIVE DEVELOPMENT. ]**
 
-1. First to parse XSD files into JavaScript objects with all information that can be converted into code.
-2. Second to use these objects to actually create the code.
+- XSD to code (xtc) will parse XSD schemas into managable JSON objects
+- Then it will convert these objects into code (Step 1: C#)
 
-It should be possible to hook into most operations to make changes to the outcome.
+[![Build Status](https://travis-ci.org/dlid/xsd-to-code.svg?branch=master)](https://travis-ci.org/dlid/xsd-to-code) [![codecov](https://codecov.io/gh/dlid/xsd-to-code/branch/master/graph/badge.svg)](https://codecov.io/gh/dlid/xsd-to-code)

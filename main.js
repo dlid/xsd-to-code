@@ -8,35 +8,47 @@ var params = process.argv,
     outputPath = process.cwd(),
     inputFiles = [];
 
+function handleXsdParameter(xsdParameter) {
+    var foundFile;
+    if (xsdParameter.toLowerCase().indexOf('http') == 0) {
+        inputFiles.push(xsdParameter);
+    } else {
+        foundFile = resolveFilePath(xsdParameter);
+        if (foundFile) {
+            inputFiles.push(foundFile);
+        } else {
+            inputFiles.push(xsdParameter);
+        }
+    }
+}
 
-    function findFile(filename) {
-        var fullPath = path.resolve(filename);
+/**
+ * Attempt to find the specified file using a number of ways.
+ * First by `path.resolve` 
+ * then in `working directory`
+ * and last in `script directory`
+ * @param {string} filename 
+ * @returns {string}
+ */
+function resolveFilePath(filename) {
+    var fullPath = path.resolve(filename);
+    if (!fs.existsSync(fullPath)) {
+        fullPath = path.join(process.cwd(), filename);
         if (!fs.existsSync(fullPath)) {
-            fullPath = path.join(process.cwd(), filename);
+            fullPath = path.join(scriptPath, filename);
             if (!fs.existsSync(fullPath)) {
-                fullPath = path.join(scriptPath, filename);
-                if (!fs.existsSync(fullPath)) {
-                    fullPath = null;
-                }
+                fullPath = null;
             }
         }
-        return fullPath;
     }
+    return fullPath;
+}
 
     do {
         if (params.length > 0) {
             var next = params.shift();
             if (next.toLowerCase().endsWith(".xsd")) {
-                if (next.toLowerCase().indexOf('http') == 0) {
-                    inputFiles.push(next);
-                } else {
-                    var foundFile = findFile(next);
-                    if (foundFile) {
-                        inputFiles.push(foundFile);
-                    } else {
-                        inputFiles.push(next);
-                    }
-                }
+                handleXsdParameter(next);
             } else if (next.toLowerCase() == "/o") {
                 break;
             } else {

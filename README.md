@@ -7,3 +7,23 @@
 
 [![Build Status](https://travis-ci.org/dlid/xsd-to-code.svg?branch=master)](https://travis-ci.org/dlid/xsd-to-code) [![codecov](https://codecov.io/gh/dlid/xsd-to-code/branch/master/graph/badge.svg)](https://codecov.io/gh/dlid/xsd-to-code)
 [![Maintainability](https://api.codeclimate.com/v1/badges/c9e6ea3ddfbfc2e80725/maintainability)](https://codeclimate.com/github/dlid/xsd-to-code/maintainability)
+
+```
+npm install
+node main.js input.xsd /o classes /n My.App /t csharp
+```
+or
+```
+var xtc = require('xsd-to-code');
+
+xtc.convert({
+ inputFiles : [
+  'input.xsd'
+ ],
+ generator : 'csharp',
+ output : 'classes'
+}).then(() => {
+ console.log("we're done");
+});
+
+```

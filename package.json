@@ -1,0 +1,37 @@
+{
+  "name": "xsd-to-code",
+  "version": "1.0.0",
+  "description": "Convert XSD Schemas to code",
+  "main": "main.js",
+  "scripts": {
+    "test": "istanbul cover node_modules/jasmine/bin/jasmine.js -verbose JASMINE_CONFIG_PATH=./jasmine.json",
+    "report-coverage": "codecov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dlid/xsd-to-code.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dlid/xsd-to-code/issues"
+  },
+  "homepage": "https://github.com/dlid/xsd-to-code#readme",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "extend": "^3.0.1",
+    "request": "^2.85.0",
+    "uuid": "^3.2.1",
+    "xml2js": "^0.4.19"
+  },
+  "devDependencies": {
+    "codecov": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-jasmine": "^3.0.0",
+    "istanbul": "^0.4.5",
+    "jasmine": "^3.1.0",
+    "jasmine-node": "^1.14.5",
+    "jasmine-reporters": "^2.3.0",
+    "jshint": "^2.9.5"
+  }
+}

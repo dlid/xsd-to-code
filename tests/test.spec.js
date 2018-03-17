@@ -29,6 +29,7 @@ describe("Test game.xsd", function() {
         expect(xFile).not.toBeNull('XsdFile parsing should not fail');
         if (xFile) {
             var globalElementIds = xFile.getGlobalElements();
+            console.log(globalElementIds);
             expect(globalElementIds).toBeDefined('List of global elements should be defined');
             expect(globalElementIds).not.toBeNull('List of global elements should not be null');
             expect(globalElementIds.length).toEqual(1);

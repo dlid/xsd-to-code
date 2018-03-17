@@ -5,6 +5,11 @@ var request = require('request');
 var xml2js = require('xml2js');
 
 
+/**
+ * Load content from the given `url`.
+ * @param {string} url 
+ * @returns {Promise}
+ */
 function loadFromUrl(url) {
     return new Promise((resolve, reject) => {
         request(url, (err, response, body) => {
@@ -20,6 +25,11 @@ function loadFromUrl(url) {
     });
 }
 
+/**
+ * Load content from the given `filename`
+ * @param {string} filename 
+ * @return {Promise}
+ */
 function loadFromFile(filename) {
     return new Promise((resolve, reject) => {
           fs.readFile(filename, "utf-8", function(err, body) {
@@ -33,7 +43,7 @@ function loadFromFile(filename) {
 }
 
 /**
- * @description Load the current schema from URL or filename
+ * Load the current schema from URL or filename
  */
 function loadXsdFileContent() {
     var self = this,
@@ -55,10 +65,10 @@ function loadXsdFileContent() {
 }
 
 /**
- * @description Attempt to load the content from loadXsdFileContent as an XML Document
+ * Attempt to load the content from loadXsdFileContent as an XML Document
  */
 function loadXsdContentAsXml() {
-    var self = this,
+    var self = this, // XsdFile instance
         content = this._.content;
 
         return new Promise((resolve, reject) => {

@@ -103,6 +103,15 @@ XsdFile.prototype.createAttributeFromXmlElement = function(attributeXmlNode, par
     return result;
 }
 
+function ensureParent(child, parent) {
+    child.path = [];
+    if (parent) {
+        child.path = parent.path.slice();
+        child.path.push(parent._id);
+    }
+    return child;
+}
+
 XsdFile.prototype.createElementFromXmlElement = function(elementXmlNode, parentObject) {
 
     if (elementXmlNode.$ && elementXmlNode.$.ref) {
@@ -113,17 +122,11 @@ XsdFile.prototype.createElementFromXmlElement = function(elementXmlNode, parentO
         throw "xs:element requires a @name or @ref attribute";
     }
 
-    var result = {
+    var result = ensureParent({
         _id : helpers.newid('element'),
-       // _schema : this._._id,
         name : elementXmlNode.$.name,
         path : [] // When path is empty it's a global element
-    };
-
-    if (parentObject) {
-        result.path = parentObject.path.slice();
-        result.path.push(parentObject._id);
-    }
+    }, parentObject);
 
     if (!elementXmlNode.$.type) {
         var complexTypes = elementXmlNode[`${this._.meta.xsdNsPrefix}:complexType`];
@@ -162,15 +165,10 @@ XsdFile.prototype.createElementFromXmlElement = function(elementXmlNode, parentO
 XsdFile.prototype.createComplexTypeFromXmlElement = function(typeXmlNode, parentObject) {
 
     var self = this,
-        result = {
+        result = ensureParent({
             _id : helpers.newid('complexType'),
             path : []
-        };
-
-    if (parentObject) {
-        result.path = parentObject.path.slice();
-        result.path.push(parentObject._id);
-    }
+        }, parentObject);
 
 
     var sequences = typeXmlNode[`${this._.meta.xsdNsPrefix}:sequence`];
@@ -203,17 +201,6 @@ XsdFile.prototype.createComplexTypeFromXmlElement = function(typeXmlNode, parent
          }
     });
 
-    // var attributes = typeXmlNode[`${this._.meta.xsdNsPrefix}:attribute`];
-    // if (attributes) {
-    //     result.attributes = [];
-    //     attributes.forEach((attrElm) => {
-    //         var newAttribute = this.createAttributeFromXmlElement(attrElm, result);
-    //         if (newAttribute) {
-    //             this._.all[newAttribute._id] = newAttribute;
-    //             result.attributes.push(newAttribute._id);
-    //         }
-    //     });
-    // }
     return result;
 }
 
